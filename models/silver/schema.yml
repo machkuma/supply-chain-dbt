@@ -1,0 +1,82 @@
+version: 2
+
+models:
+  - name: fact_orders
+    description: Silver layer fact table for orders with cleaned and enriched data
+    
+    columns:
+      - name: order_fact_id
+        description: Surrogate key for the fact table
+        tests:
+          - unique
+          - not_null
+      
+      - name: order_id
+        description: Natural key - unique order identifier
+        tests:
+          - unique
+          - not_null
+      
+      - name: customer_id
+        description: Foreign key to customer dimension
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer_snapshot')
+              field: customer_id
+      
+      - name: product_id
+        description: Foreign key to product dimension
+        tests:
+          - not_null
+      
+      - name: sales
+        description: Total sales amount
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: true
+      
+      - name: profit
+        description: Profit amount (can be negative)
+        tests:
+          - not_null
+      
+      - name: days_to_deliver
+        description: Number of days from order to delivery
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 90
+              inclusive: true
+      
+      - name: profitability_flag
+        description: Profitability category
+        tests:
+          - accepted_values:
+              values: ['Profit', 'Loss', 'Break-even']
+
+snapshots:
+  - name: dim_customer_snapshot
+    description: SCD Type 2 dimension for customers tracking historical changes
+    
+    columns:
+      - name: customer_id
+        description: Natural key - customer identifier
+        tests:
+          - not_null
+      
+      - name: dbt_valid_from
+        description: Start date of this version
+        tests:
+          - not_null
+      
+      - name: dbt_valid_to
+        description: End date of this version (NULL for current)
+      
+      - name: dbt_scd_id
+        description: Unique identifier for this snapshot version
+        tests:
+          - unique
+          - not_null

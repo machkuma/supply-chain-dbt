@@ -1,0 +1,31 @@
+# dbt Profiles Configuration
+# Save this as ~/.dbt/profiles.yml
+
+supply_chain:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      warehouse: ETL_WH_SMALL
+      database: SILVER_DB
+      schema: CORE_SCHEMA
+      threads: 4
+      client_session_keep_alive: False
+      query_tag: dbt_supply_chain
+    
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      warehouse: ETL_WH_LARGE
+      database: SILVER_DB
+      schema: CORE_SCHEMA
+      threads: 8
+      client_session_keep_alive: False
+      query_tag: dbt_supply_chain_prod
