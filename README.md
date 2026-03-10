@@ -79,7 +79,7 @@ Data Sources → AWS S3 → Snowflake (Bronze) → dbt (Silver/Gold) → Analyti
 
 1. **Clone repository**
 ```bash
-   git clone https://github.com/YOUR_USERNAME/supply-chain-dbt.git
+   git clone https://github.com/machkuma/supply-chain-dbt.git
    cd supply-chain-dbt
 ```
 
